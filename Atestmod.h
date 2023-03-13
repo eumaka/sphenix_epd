@@ -51,6 +51,8 @@ class Atestmod: public SubsysReco
     
   //Event counter
   int _event;
+  
+  float _tile_e;
 
   //User modules
   void fill_tree(PHCompositeNode*);
