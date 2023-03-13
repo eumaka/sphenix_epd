@@ -84,8 +84,8 @@ int Atestmod::Init(PHCompositeNode *topNode) {
 
 	_event_tree = new TTree("event", "EPD => event info");
     
-  _event_tree->Branch("event", &_event, "_event/I");
-  _event_tree->Branch("tile_e", &_tile_e, "_tile_e/F");
+        _event_tree->Branch("event", &_event, "_event/I");
+        _event_tree->Branch("tile_e", &_tile_e, "_tile_e/F");
     
 	return Fun4AllReturnCodes::EVENT_OK;
 }
@@ -160,7 +160,7 @@ void Atestmod::fill_tree(PHCompositeNode *topNode)
      TowerInfo *_tower = towers_calib->get_tower_at_channel(ch);
      unsigned int thiskey =_towerinfos->encode_epd(ch);
   
-     tile_e = _tower->get_energy();
+     _tile_e = _tower->get_energy();
      
    }
     
