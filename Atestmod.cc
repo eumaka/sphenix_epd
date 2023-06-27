@@ -9,13 +9,9 @@
 #include <calobase/TowerInfoContainerv1.h>
 #include <calobase/TowerInfo.h>
 #include <calobase/TowerInfov1.h>
+#include <calobase/TowerInfoDefs.h>
 
 
-#include <g4main/PHG4HitContainer.h>
-#include <g4main/PHG4Hit.h>
-#include <g4main/PHG4TruthInfoContainer.h>
-#include <g4main/PHG4VtxPoint.h>
-#include <g4main/PHG4Particle.h>
 
 #include <phool/PHCompositeNode.h>
 #include <phool/PHIODataNode.h>
@@ -26,26 +22,8 @@
 #include <phool/phool.h>
 
 
-#include <phgeom/PHGeomUtility.h>
+#include <epd/EpdGeom.h>
 
-#include <g4detectors/PHG4CylinderCellGeomContainer.h>
-#include <g4detectors/PHG4CylinderCellGeom_Spacalv1.h>
-#include <g4detectors/PHG4CylinderGeomContainer.h>
-#include <g4detectors/PHG4CylinderGeom_Spacalv3.h>
-#include <g4detectors/PHG4CellDefs.h>
-
-#include <TTree.h>
-#include <TH2D.h>
-#include <TVector3.h>
-#include <TRandom3.h>
-#include <TMath.h>
-
-#include <trackbase_historic/SvtxTrackMap.h>
-#include <g4jets/Jet.h>
-#include <g4jets/JetMap.h>
-#include <g4jets/JetMapv1.h>
-#include <g4main/PHG4Utils.h>
-#include <epd/EPDDefs.h>
 
 #include <iostream>
 #include <cassert>
@@ -85,8 +63,15 @@ int Atestmod::Init(PHCompositeNode *topNode) {
 	_event_tree = new TTree("event", "EPD => event info");
     
         _event_tree->Branch("event", &_event, "_event/I");
-        _event_tree->Branch("tile_e", &_tile_e, "_tile_e/F");
-    
+        _event_tree->Branch("tile_e", &_t);   
+	_event_tree->Branch("tile_r", &_r);    
+        _event_tree->Branch("tile_z", &_z);    
+        _event_tree->Branch("tile_phi", &_phi);    
+        _event_tree->Branch("tile_rbin", &_rbin);   
+	_event_tree->Branch("tile_phibin", &_phibin);    
+        _event_tree->Branch("tile_armbin", &_armbin);    
+        _event_tree->Branch("tile_sectorid", &_sectorid);    
+
 	return Fun4AllReturnCodes::EVENT_OK;
 }
 
@@ -143,8 +128,8 @@ void Atestmod::fill_tree(PHCompositeNode *topNode)
 
     cout << _event << endl;
 
-    string towerinfonodename_calib = "TOWERINFO_CALIB_EPD";
-    TowerInfoContainerv1 *towers_calib = findNode::getClass<TowerInfoContainerv1>(topNode, towerinfonodename_calib.c_str());
+    string towerinfonodename_calib = "TOWERS_EPD";
+    TowerInfoContainer *towers_calib = findNode::getClass<TowerInfoContainerv1>(topNode, towerinfonodename_calib.c_str());
     
     if (!towers_calib)
       {
@@ -152,16 +137,46 @@ void Atestmod::fill_tree(PHCompositeNode *topNode)
           exit(1);
       }
 
-  
-    unsigned int ntowers = towers_calib->size();
+   string geominfonodename = "TOWERGEOM_EPD";
+    EpdGeom *epdtilegeom = findNode::getClass<EpdGeom>(topNode, geominfonodename.c_str());
+
+    if (!epdtilegeom)
+      {
+          std::cout << "Could not locate SEPD geometry node " << std::endl;
+          exit(1);
+      }
+
+   float tile_e = 0.;
+   float tile_z = 0.;
+   float tile_r = 0.;
+   float tile_phi = 0.;
+   int arm  = -1; int phibin = -1; int rbin = -1; int sectorid = -1;
+   unsigned int ntowers = towers_calib->size();
    for (unsigned int ch = 0; ch < ntowers;  ch++)
    {
 
      TowerInfo *_tower = towers_calib->get_tower_at_channel(ch);
      unsigned int thiskey =_towerinfos->encode_epd(ch);
   
-     _tile_e = _tower->get_energy();
-     
+     tile_e = _tower->get_energy();
+     tile_phi = epdtilegeom->get_phi(key);
+     tile_r = epdtilegeom->get_r(key);
+     tile_z = epdtilegeom->get_z(key);
+
+     arm = TowerInfoDefs::get_epd_arm(key);
+     phibin = TowerInfoDefs::get_epd_phibin(key);
+     rbin = TowerInfoDefs::get_epd_rbin(key);
+     sectorid = TowerInfoDefs::get_epd_sector(key);
+
+      _t.push_back(tile_e);
+      _z.push_back(tile_z);
+      _r.push_back(tile_r);
+      _phi.push_back(tile_phi);
+      _rbin.push_back(rbin);
+      _phibin.push_back(phibin);
+      _armbin.push_back(arm);
+      _sectorid.push_back(sectorid);
+	     
    }
     
  
