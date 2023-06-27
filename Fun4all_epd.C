@@ -27,7 +27,7 @@ void Fun4all_epd()
   Atestmod *epdeval = new Atestmod();
   se->registerSubsystem(epdeval);
 
-  Fun4AllInputManager *in = new Fun4AllDstInputManager("DSTcalo");
+  Fun4AllInputManager *in = new Fun4AllDstInputManager("EPDDST");
   in->AddFile("/sphenix/user/eumaka/ProducedCommissionigDSTS/00014266-0000.root");
 
 
