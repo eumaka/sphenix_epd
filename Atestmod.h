@@ -51,8 +51,7 @@ class Atestmod: public SubsysReco
     
   //Event counter
   int _event;
-  
-  float _tile_e;
+  std::vector<float> _t;
 
   //User modules
   void fill_tree(PHCompositeNode*);
