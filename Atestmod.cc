@@ -5,13 +5,13 @@
 #include <fun4all/PHTFileServer.h>
 #include <fun4all/Fun4AllServer.h>
 
+#include <epd/EpdGeom.h>
+
 #include <calobase/TowerInfoContainer.h>
 #include <calobase/TowerInfoContainerv1.h>
 #include <calobase/TowerInfo.h>
 #include <calobase/TowerInfov1.h>
 #include <calobase/TowerInfoDefs.h>
-
-
 
 #include <phool/PHCompositeNode.h>
 #include <phool/PHIODataNode.h>
@@ -21,16 +21,10 @@
 #include <phool/getClass.h>
 #include <phool/phool.h>
 
-
-#include <epd/EpdGeom.h>
-
-
 #include <iostream>
 #include <cassert>
 #include <fstream>
 #include <sstream>
-
-
 
 using namespace std;
 
@@ -180,7 +174,6 @@ void Atestmod::fill_tree(PHCompositeNode *topNode)
    }
     
  
-
 
 return;
 
