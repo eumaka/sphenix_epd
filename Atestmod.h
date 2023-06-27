@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-
-
 //Forward declerations
 class PHCompositeNode;
 class TFile; 
@@ -16,11 +14,6 @@ class RawTowerContainer;
 class RawTowerGeomContainer;
 class TH2F;
 class TProfile;
-
-//class TowerInfoContainerv1;
-
-//TowerInfoContainerv1* towers
-
 
 //Brief: basic ntuple and histogram creation for sim evaluation
 class Atestmod: public SubsysReco
